@@ -1,0 +1,10 @@
+api:
+  version: "v1"
+  name: "my-api"
+
+
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  basePath: "${api.name}/${api.version}/api"
+  timeout: "30000"

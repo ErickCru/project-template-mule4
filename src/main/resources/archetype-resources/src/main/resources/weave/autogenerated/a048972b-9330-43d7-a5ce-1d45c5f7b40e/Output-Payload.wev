@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_a048972b_9330_43d7_a5ce_1d45c5f7b40e_Output_Payload = {|
+  timestamp: String, 
+  appName: String, 
+  environment: String, 
+  status: String, 
+  details: {| error: String | Null |}
+|}
+

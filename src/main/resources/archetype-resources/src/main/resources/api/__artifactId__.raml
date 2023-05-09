@@ -1,0 +1,14 @@
+#%RAML 1.0
+title: ${artifactId}
+version: 1.0
+baseUri: /v1/api
+description: Api for ${artifactId}
+
+uses:
+  health: libraries/healthCheck.raml
+  SecuritySchemas: libraries/clientIdEnforcement.raml
+
+securedBy: [SecuritySchemas.clientIdEnforcement]
+
+/health:
+  type: health.check

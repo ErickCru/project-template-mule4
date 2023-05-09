@@ -1,0 +1,46 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="health-check-impl" doc:id="a048972b-9330-43d7-a5ce-1d45c5f7b40e" >
+		<ee:transform doc:name="Transform Message" doc:id="fa11e07e-5794-4ee6-aec3-23fe3e4392b8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	timestamp: now() as String,
+	appName: Mule::p('app.name'),
+	environment: Mule::p('mule.env'),
+	status: "Running",
+	details: {}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b36a10d6-b109-4b10-9375-de7fe047c6bb" >
+				<ee:transform doc:name="Transform Message" doc:id="d09c7b87-9fd3-412f-b0b8-1b73beb3cf69" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	timestamp: now() as String,
+	appName: Mule::p('app.name'),
+	environment: Mule::p('mule.env'),
+	status: "Down",
+	details: {
+		error: error.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
